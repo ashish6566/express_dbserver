@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 //routes import
-import students from './src/routes/students';
+import students from './assets/routes/students';
 
 const app = express();
 let port = 3000 || process.env.PORT;
@@ -25,7 +25,7 @@ app.get('/', (req, res, next) => {
 	});
 });
 
-let isServer = false;
+export let isServer = false;
 
 export function launchServer() {
 	if (isServer == false) {
