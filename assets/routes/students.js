@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 
 			connection.query(sql, (err, result) => {
 				if (err) {
-					res.status(501).send(err);
+					res.status(500).send(err);
 				} else {
 					res.status(200).send(result);
 				}
@@ -25,22 +25,22 @@ router.get('/:id', (req, res) => {
 	let id = req.params.id;
 
 	if (!id) {
-		res.send('Please provide valid id');
+		res.status(400).send('Please provide valid id');
 	}
 
 	db.connPool.getConnection((err, connection) => {
-		if (!err) {
+		if (err) {
+			res.status(500).send(err);
+		} else {
 			let sql = 'SELECT * FROM  db1.students WHERE id = ?;';
 
 			connection.query(sql, [id], (error, result) => {
 				if (error) {
 					res.status(500).send(error);
 				} else {
-					res.send(result);
+					res.status(200).send(result);
 				}
 			});
-		} else {
-			res.send(err);
 		}
 	});
 });
@@ -68,15 +68,15 @@ router.post(
 			!address ||
 			!contact
 		) {
-			res.send('Please Provided all the required fields');
+			res.status(400).send('Please Provided all the required fields');
 		}
 
 		db.connPool.getConnection((err, connection) => {
-			if (!err) {
-				let sql = `INSERT INTO db1.students 
-        (RegistrationId, Firstname, Surname, Gender, Dateofbirth, Guardians, Contact, Address )
-        VALUES
-        ('?', '?', '?', '?', '?', '?', '?', '?');`;
+			if (err) {
+				res.status(500).send(err);
+			} else {
+				let sql =
+					'INSERT INTO db1.students (RegistrationId, Firstname, Surname, Gender, Dateofbirth, Guardians, Contact, Address ) VALUES (\'?\', \'?\', \'?\', \'?\', \'?\', \'?\', \'?\', \'?\');';
 
 				connection.query(
 					sql,
@@ -93,14 +93,12 @@ router.post(
 					],
 					(error, result) => {
 						if (error) {
-							res.send(error);
+							res.status(500).send(error);
 						} else {
-							res.send(result);
+							res.status(200).send(result);
 						}
 					}
 				);
-			} else {
-				res.send(err);
 			}
 		});
 	}
@@ -130,11 +128,13 @@ router.put(
 			!contact ||
 			!email
 		) {
-			res.send('Please Provided all the required fields');
+			res.status(400).send('Please Provided all the required fields');
 		}
 
 		db.connPool.getConnection((err, connection) => {
-			if (!err) {
+			if (err) {
+				res.status(500).send(err);
+			} else {
 				let sql = 'UPDATE db1.students SET ';
 
 				connection.query(
@@ -152,14 +152,12 @@ router.put(
 					],
 					(error, result) => {
 						if (error) {
-							res.send(error);
+							res.status(500).send(error);
 						} else {
-							res.send(result);
+							res.status(200).send(result);
 						}
 					}
 				);
-			} else {
-				res.send(err);
 			}
 		});
 	}
@@ -169,18 +167,18 @@ router.delete('/delete/:id', (req, res) => {
 	let id = req.params.id;
 
 	db.connPool.getConnection((err, connection) => {
-		if (!err) {
+		if (err) {
+			res.status(500).send(err);
+		} else {
 			let sql = 'DELETE FROM db1.students where id = ?';
 
 			connection.query(sql, [id], (error, result) => {
 				if (error) {
-					res.send(error);
+					res.status(500).send(error);
 				} else {
-					res.send(result);
+					res.status(200).send(result);
 				}
 			});
-		} else {
-			res.send(err);
 		}
 	});
 });

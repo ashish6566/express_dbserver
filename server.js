@@ -18,23 +18,27 @@ app.use(cors());
 app.use('/students', students);
 
 app.get('/', (req, res, next) => {
-	res.send('School Management System Database Server');
+	res.status(200).send('School Management System Database Server');
 
 	next(err => {
-		res.send(err);
+		res.status(500).send(err);
 	});
 });
 
-export let isServer = false;
+let isServer = false; // is Server listening: false
 
-export function launchServer() {
+let dbServer; //later after express app starts listening will return instance of Server
+
+function launchServer() {
 	if (isServer == false) {
-		return {
-			dbserver: app.listen(port, () => {
-				console.log(`Database Server: http://localhost:${port}`);
-				isServer = true;
-			})
-		};
+		dbServer = app.listen(port, () => {
+			console.log(`Database Server: http://localhost:${port}`);
+			isServer = true;
+		});
 	}
 }
+
 launchServer(); // invoking function
+
+//exports
+export { dbServer, isServer, launchServer };
