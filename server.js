@@ -25,6 +25,17 @@ app.get('/', (req, res, next) => {
 	});
 });
 
+//testing
+app.post('/testpost', (req, res, next) => {
+	let data = req.body;
+	res.send(data);
+	next(error => {
+		if (error) {
+			res.send(error);
+		} else return;
+	});
+});
+
 let isServer = false; // is Server listening: false
 
 let dbServer; //later after express app starts listening will return instance of Server

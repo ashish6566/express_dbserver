@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"start": "babel-node ./server.js"
+		"start": "babel-node ./server.js",
+		"serve": "nodemon --exec npm run start"
 	},
 	"keywords": [],
 	"author": "",
